@@ -1,0 +1,6 @@
+#!/bin/sh
+cd ../src
+gem build bare-rb.gemspec
+gem install bare-rb-0.0.0.gem
+cd ../tests
+ruby ./tests.rb

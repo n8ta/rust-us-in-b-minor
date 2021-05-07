@@ -1,0 +1,30 @@
+language: ruby
+os: linux
+dist: focal
+before_install:
+  - sudo apt-get update
+  - sudo apt-get install python3.8
+  - python3 --version
+  - python3 -m pip install setuptools
+  - cd tests/bare-py
+  - sudo python3 setup.py install > /dev/null
+  - cd ../..
+  - ruby -v
+  - gem install bundler -v 2.2.15
+  - cd tests
+  - bundle
+
+jobs:
+  include:
+    - rvm: 2.7
+      script:
+        - bundle exec ruby ./ci.rb
+
+    - rvm: 2.6
+      script:
+        - bundle exec ruby ./ci.rb
+
+    - rvm: 2.5
+      script:
+        - bundle exec ruby ./ci.rb
+
