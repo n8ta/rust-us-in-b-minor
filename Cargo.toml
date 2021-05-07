@@ -1,0 +1,9 @@
+[package]
+name = "rust-us-in-b-minor"
+version = "0.1.0"
+authors = ["n8ta <n8@u.northwestern.edu>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
