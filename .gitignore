@@ -1,4 +1,6 @@
+
 .idea
-target
-a.out
-.DS_Store
+tests/__pycache__/
+coverage
+tests/coverage
+src/bare-rb-*.gem

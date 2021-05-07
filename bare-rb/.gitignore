@@ -1,6 +1,0 @@
-
-.idea
-tests/__pycache__/
-coverage
-tests/coverage
-src/bare-rb-*.gem
