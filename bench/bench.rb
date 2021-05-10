@@ -1,16 +1,21 @@
-require 'bare-rb'
+require_relative '../src/lib/bare-rb'
 require 'benchmark'
 
-file = File.open("/Users/jack/Downloads/Midterm.zip", "rb").read
+dead_beef_1000000 = ["\xDE\xAD\xBE\xEF".b] * 1024 * 1
+ruby_schema = Bare.Array(Bare.Data)
+# rust_schema = BareRust.Array(BareRust.Data)
 
-list = []
-(0..(file.size / 1024)).each do |idx|
-    list.append(file[idx * 1024..((idx + 1) * 1024)])
+def bench(class_obj, schema, data)
+  Benchmark.measure {
+    encoded = class_obj.encode(data, schema)
+    decoded = class_obj.decode(encoded, schema)
+    if decoded != data
+      raise Exception.new("DECODE DOESN'T MATCH ORIGINAL")
+    end
+  }
 end
 
-schema = Bare.Array(Bare.Data)
-
-puts Benchmark.measure {
-    output = Bare.encode(list, schema)
-    output = Bare.decode(output, schema)
-}
+ruby = bench(Bare, ruby_schema, dead_beef_1000000)
+# rust = bench(BareRust, rust_schema, dead_beef_1000000)
+puts "Ruby: #{ruby.real.round(4)}s"
+# puts "Rust: #{output.real.round(3)}s"

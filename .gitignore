@@ -1,4 +1,5 @@
 .idea
+ext/barerbrs/target/
 tests/__pycache__/
 coverage
 tests/coverage
