@@ -1,7 +1,7 @@
 require_relative 'librustbare/ffi'
 
 # Hello from RUST!
-puts Fib::FFI.helgitlo_world(1337)
+puts Fib::FFI.hello_world(1337)
 
 
 class BareRust
