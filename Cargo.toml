@@ -5,11 +5,9 @@ authors = ["n8ta <n8@u.northwestern.edu>"]
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
-libc = "0.2"
+rutie = {version="0.8.2"}
 
 [lib]
-name = "rustbare"
-
+name = "rutie_ruby_example"
 crate-type = ["cdylib"]

@@ -1,9 +1,0 @@
-type Customer {
-  name: string
-  email: string
-  orders: []{
-    orderId: i64
-    quantity: i32
-  }
-  metadata: map[string]data
-}

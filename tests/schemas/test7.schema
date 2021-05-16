@@ -1,5 +1,0 @@
-type PublicKey data<128>
-
-type Customer {
-  pubKey: PublicKey
-}

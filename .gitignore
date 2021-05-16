@@ -1,8 +1,14 @@
-.idea
-ext/barerbrs/target/
-tests/__pycache__/
-coverage
-tests/coverage
-src/bare-rb-*.gem
-.DS_Store
-.vscode
+/.bundle/
+/.yardoc
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/tmp/
+
+
+# Added by cargo
+
+/target
+Cargo.lock
