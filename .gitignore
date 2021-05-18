@@ -1,4 +1,6 @@
 /.bundle/
+.idea/*
+.idea
 /.yardoc
 /_yardoc/
 /coverage/
