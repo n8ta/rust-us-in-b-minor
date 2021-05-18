@@ -9,5 +9,5 @@ edition = "2018"
 rutie = {version="0.8.2"}
 
 [lib]
-name = "rutie_ruby_example"
+name = "barers"
 crate-type = ["cdylib"]
