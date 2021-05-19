@@ -1,16 +1,22 @@
-use rutie::{Class, AnyObject, Object, GC, Float, RString, Encoding};
+use rutie::{Class, AnyObject, Object, Float, RString, Encoding};
 use lazy_static::lazy_static;
 
-pub struct RustFloat64 {
-    val: Float,
-}
+pub struct RustFloat64 {}
 
 impl RustFloat64 {
-    fn new(val: Float) -> Self {
-        RustFloat64 {
-            val
+    pub fn new() -> Self {
+        RustFloat64 {}
+    }
+    pub fn encode(&self, fl: AnyObject, bytes: &mut Vec<u8>) {
+        let fl = fl.try_convert_to::<Float>().unwrap();
+        let f64_bytes = fl.to_f64().to_le_bytes();
+        for idx in 0..8 {
+            bytes.push(f64_bytes[idx]);
         }
-
+    }
+    pub fn decode<'a>(&self, bytes: &'a [u8]) -> (&'a [u8], Float) {
+        let float_bs: [u8; 8] = [bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7]];
+        return (&bytes[8..], Float::new(f64::from_le_bytes(float_bs)))
     }
 }
 
@@ -20,7 +26,7 @@ wrappable_struct! {
     RUST_FLOAT_64_WRAP,
 
     mark(data) {
-        GC::mark(&data.val)
+        // GC::mark(&data.val)
     }
 }
 
@@ -30,22 +36,24 @@ methods! {
     BareFloat64,
     rtself,
 
-    fn new(input: Float) -> AnyObject {
-        let num = input.unwrap();
-        let vec = RustFloat64::new(num);
-        Class::from_existing("BareFloat64").wrap_data(vec, &*RUST_FLOAT_64_WRAP)
+    fn new() -> AnyObject {
+        let cls = RustFloat64::new();
+        Class::from_existing("BareFloat64").wrap_data(cls, &*RUST_FLOAT_64_WRAP)
     }
 
-    fn encode() -> RString {
+    fn encode(input: AnyObject) -> RString {
         let rfloat64 = rtself.get_data_mut(&*RUST_FLOAT_64_WRAP);
-        RString::from_bytes(&rfloat64.val.to_f64().to_be_bytes(), &Encoding::us_ascii())
+        let mut bytes: Vec<u8> = vec![];
+        rfloat64.encode(input.unwrap(), &mut bytes);
+        RString::from_bytes(&mut bytes, &Encoding::us_ascii())
     }
 
-    fn decode(to_decode: RString) -> Float {
-        let safe = to_decode.unwrap();
-        let u = safe.to_bytes_unchecked();
-        let bytes: [u8; 8] = [u[0], u[1], u[2], u[3], u[4], u[5], u[6], u[7]];
-        Float::new(f64::from_le_bytes(bytes))
+    fn decode(to_decode: AnyObject) -> Float {
+        let safe = to_decode.unwrap().try_convert_to::<RString>().unwrap();
+        let bytes = safe.to_bytes_unchecked();
+        let rfloat64 = rtself.get_data_mut(&*RUST_FLOAT_64_WRAP);
+        let (_, float) = rfloat64.decode(bytes);
+        return float
     }
 
 }

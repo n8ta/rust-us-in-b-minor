@@ -1,5 +1,6 @@
 mod array;
 mod float64;
+mod fixed_array;
 
 #[macro_use]
 extern crate rutie;
