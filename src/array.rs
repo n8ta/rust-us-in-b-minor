@@ -2,6 +2,8 @@ use rutie::{Class, AnyObject, Object, Fixnum, GC, NilClass};
 use lazy_static::lazy_static;
 use std::ops::{Deref, DerefMut};
 
+const RUBY_CLASS_NAME: &str = "BareArray";
+
 pub struct BareArray {
     inner: Vec<AnyObject>,
 }
@@ -51,7 +53,7 @@ methods! {
     fn new() -> AnyObject {
         let vec = BareArray::new();
 
-        Class::from_existing("BareArray").wrap_data(vec, &*BARE_ARRAY_WRAPPER)
+        Class::from_existing(RUBY_CLASS_NAME).wrap_data(vec, &*BARE_ARRAY_WRAPPER)
     }
 
     fn push(object: AnyObject) -> NilClass {
@@ -68,7 +70,7 @@ methods! {
 }
 pub fn array_init() {
     let data_class = Class::from_existing("Object");
-    Class::new("BareArray", Some(&data_class)).define(|klass| {
+    Class::new(RUBY_CLASS_NAME, Some(&data_class)).define(|klass| {
         klass.def_self("new", new);
 
         klass.def("push", push);
