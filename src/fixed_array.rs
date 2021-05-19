@@ -50,7 +50,7 @@ methods! {
 
     fn new(input: Fixnum) -> AnyObject {
         let fixed_array = RustFixedArray::new(input.unwrap());
-        Class::from_existing("RustFixedArray").wrap_data(fixed_array, &*RUST_FIXED_ARRAY_WRAP)
+        Class::from_existing("BareFixedArray").wrap_data(fixed_array, &*RUST_FIXED_ARRAY_WRAP)
     }
 
     fn encode(message: AnyObject) -> RString {
