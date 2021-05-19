@@ -1,4 +1,3 @@
-mod array;
 mod float64;
 mod fixed_array;
 
@@ -8,7 +7,6 @@ extern crate rutie;
 #[macro_use]
 extern crate lazy_static;
 
-use array::array_init;
 use float64::float64_init;
 use fixed_array::fixed_array_init;
 
