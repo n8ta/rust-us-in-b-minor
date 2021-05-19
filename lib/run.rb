@@ -2,7 +2,6 @@ require 'rutie'
 
 Rutie.new(:barers).init 'bare_init', __dir__
 
-
 float32 = BareFloat64.new()
 floatarr = BareFixedArray.new(3)
 init = [1.1,2.2,3.3]

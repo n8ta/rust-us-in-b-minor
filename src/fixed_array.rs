@@ -1,5 +1,6 @@
 use rutie::{Class, AnyObject, Object, Float, RString, Encoding, Fixnum, Array};
 use lazy_static::lazy_static;
+use crate::BareType;
 use crate::float64::RustFloat64;
 
 pub struct RustFixedArray {
@@ -26,7 +27,7 @@ impl RustFixedArray {
         let array = input.try_convert_to::<Array>().unwrap();
         let float = RustFloat64::new();
         for idx in 0..self.len {
-            float.encode(array.at(idx), bytes)
+            float.encode(array.at(idx), bytes);
         }
     }
     pub fn decode<'a>(&self, bytes: &'a [u8]) -> (&'a [u8], Array) {

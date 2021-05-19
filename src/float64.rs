@@ -1,21 +1,29 @@
-use rutie::{Class, AnyObject, Object, Float, RString, Encoding};
+use rutie::{Class, AnyObject, Object, Float, RString, Encoding, AnyException};
 use lazy_static::lazy_static;
-
-pub struct RustFloat64 {}
+use crate::BareType;
+pub struct RustFloat64;
 
 impl RustFloat64 {
     pub fn new() -> Self {
-        RustFloat64 {}
+        RustFloat64
     }
-    pub fn encode(&self, fl: AnyObject, bytes: &mut Vec<u8>) {
-        let fl = fl.try_convert_to::<Float>().unwrap();
+}
+
+impl BareType for RustFloat64 {
+    type RubyType = Float;
+    fn encode(&self, fl: AnyObject, bytes: &mut Vec<u8>) -> Result<(),AnyException> {
+        let fl = fl.try_convert_to::<Float>()?;
         let f64_bytes = fl.to_f64().to_le_bytes();
         for idx in 0..8 {
             bytes.push(f64_bytes[idx]);
         }
+        return Ok(());
     }
-    pub fn decode<'a>(&self, bytes: &'a [u8]) -> (&'a [u8], Float) {
-        let float_bs: [u8; 8] = [bytes[0], bytes[1], bytes[2], bytes[3], bytes[4], bytes[5], bytes[6], bytes[7]];
+    fn decode<'a>(&self, bytes: &'a [u8]) -> (&'a [u8], Float) {
+        let mut float_bs: [u8; 8] = [0; 8];
+        for (float_bs_ref, value) in float_bs.iter_mut().zip(bytes) {
+            *float_bs_ref = *value;
+        }
         return (&bytes[8..], Float::new(f64::from_le_bytes(float_bs)))
     }
 }
@@ -29,6 +37,16 @@ wrappable_struct! {
         // GC::mark(&data.val)
     }
 }
+
+// Rust functions should not panic into C -> into ruby
+//     ? turn it into a ruby exception ?
+
+// TryFrom can turn a [u8] into a [u8; 8]
+
+// SplitAt can take a slice and return two slices
+
+// Look at Byte Buffers - instead of [u8] + mut vec
+//      provides a stream to read from and to write too
 
 class!(BareFloat64);
 
