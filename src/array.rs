@@ -1,4 +1,4 @@
-use rutie::{Class, NilClass, AnyObject, Object, Fixnum, GC, VM};
+use rutie::{Class, AnyObject, Object, Fixnum, GC, NilClass};
 use lazy_static::lazy_static;
 use std::ops::{Deref, DerefMut};
 
