@@ -1,10 +1,27 @@
-use rutie::{Class, AnyObject, Object, Float, RString, Encoding, Fixnum, Array};
+use rutie::{Class, AnyObject, Object, RString, Encoding, Fixnum, Array, AnyException};
 use lazy_static::lazy_static;
 use crate::BareType;
-use crate::float64::RustFloat64;
+use Box;
 
+use crate::into_rust::into_rust;
+
+
+// Ideas:
+// 1. Create a table of pointers to each Type and lookup each ruby object's wrapped rust class in that table
+
+
+// VTable
+// for multiple children you get a struct with fields for each member function
+// You get a ptr into this table of tables
+// [
+//     { ... },
+//     {"name": 0x123, "blargh()": 0x22222 }
+// ]
+
+#[derive(Clone, Debug)]
 pub struct RustFixedArray {
-    len: i64
+    len: i64,
+    array_type: Box<dyn BareType>,
 }
 
 wrappable_struct! {
@@ -12,34 +29,47 @@ wrappable_struct! {
     RustFixedArrayWrap,
     RUST_FIXED_ARRAY_WRAP,
 
-    mark(data) {}
+    mark(data) {
+        // GC::mark(&data.val)
+    }
 }
 
 impl RustFixedArray {
-    fn new(val: Fixnum) -> Self {
+    pub fn rust_new(len: i64, array_type: Box<dyn BareType>) -> Self {
         RustFixedArray {
-            len: val.to_i64()
+            len,
+            array_type,
         }
     }
+    pub fn new(val: Fixnum, typ: AnyObject) -> Self {
+        let mut typ = typ.clone();
+        println!("New Rust Fixed Array");
+        let ret = RustFixedArray {
+            len: val.to_i64(),
+            array_type: into_rust(&mut typ),
+        };
+        ret
+    }
+}
 
-    // pub fn encode(&self, fl: Float, bytes: &mut Vec<u8>) {
-    pub fn encode(&self, input: AnyObject, bytes: &mut Vec<u8>) {
+impl BareType for RustFixedArray {
+
+    fn encode(&self, input: AnyObject, bytes: &mut Vec<u8>) -> std::result::Result<(),AnyException> {
         let array = input.try_convert_to::<Array>().unwrap();
-        let float = RustFloat64::new();
         for idx in 0..self.len {
-            float.encode(array.at(idx), bytes);
+            self.array_type.encode(array.at(idx), bytes);
         }
+        Result::Ok(())
     }
-    pub fn decode<'a>(&self, bytes: &'a [u8]) -> (&'a [u8], Array) {
+    fn decode<'a>(&self, bytes: &'a [u8]) -> (&'a [u8], AnyObject) {
         let mut array = Array::new();
-        let float = RustFloat64::new();
         let mut bytes = bytes;
         for _ in 0..self.len {
-            let (remaining_bytes, float) = float.decode(bytes);
+            let (remaining_bytes, decoded) = self.array_type.decode(bytes);
             bytes = remaining_bytes;
-            array.push(float);
+            array.push(decoded);
         }
-        (bytes, array)
+        (bytes, array.into())
     }
 }
 
@@ -49,9 +79,10 @@ methods! {
     BareFixedArray,
     rtself,
 
-    fn new(input: Fixnum) -> AnyObject {
-        let fixed_array = RustFixedArray::new(input.unwrap());
-        Class::from_existing("BareFixedArray").wrap_data(fixed_array, &*RUST_FIXED_ARRAY_WRAP)
+    fn new(input: Fixnum, typ: AnyObject) -> AnyObject {
+        let fixed_array = RustFixedArray::new(input.unwrap(), typ.unwrap());
+        let ret = Class::from_existing("BareFixedArray").wrap_data(fixed_array, &*RUST_FIXED_ARRAY_WRAP);
+        ret
     }
 
     fn encode(message: AnyObject) -> RString {
@@ -62,7 +93,7 @@ methods! {
         RString::from_bytes(bytes.as_slice(), &Encoding::us_ascii())
     }
 
-    fn decode(to_decode: RString) -> Array {
+    fn decode(to_decode: RString) -> AnyObject {
         let rstr = to_decode.unwrap().try_convert_to::<RString>().unwrap();
         let mut bytes = rstr.to_bytes_unchecked();
         let array = rtself.get_data_mut(&*RUST_FIXED_ARRAY_WRAP);

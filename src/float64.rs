@@ -1,7 +1,11 @@
 use rutie::{Class, AnyObject, Object, Float, RString, Encoding, AnyException};
 use lazy_static::lazy_static;
 use crate::BareType;
+
+
+#[derive(Clone, Debug)]
 pub struct RustFloat64;
+
 
 impl RustFloat64 {
     pub fn new() -> Self {
@@ -10,7 +14,6 @@ impl RustFloat64 {
 }
 
 impl BareType for RustFloat64 {
-    type RubyType = Float;
     fn encode(&self, fl: AnyObject, bytes: &mut Vec<u8>) -> Result<(),AnyException> {
         let fl = fl.try_convert_to::<Float>()?;
         let f64_bytes = fl.to_f64().to_le_bytes();
@@ -19,12 +22,14 @@ impl BareType for RustFloat64 {
         }
         return Ok(());
     }
-    fn decode<'a>(&self, bytes: &'a [u8]) -> (&'a [u8], Float) {
+    fn decode<'a>(&self, bytes: &'a [u8]) -> (&'a [u8], AnyObject) {
+        println!("float64 decoding...");
         let mut float_bs: [u8; 8] = [0; 8];
         for (float_bs_ref, value) in float_bs.iter_mut().zip(bytes) {
             *float_bs_ref = *value;
         }
-        return (&bytes[8..], Float::new(f64::from_le_bytes(float_bs)))
+        let float = Float::new(f64::from_le_bytes(float_bs));
+        return (&bytes[8..], float.into())
     }
 }
 
@@ -59,6 +64,8 @@ methods! {
         Class::from_existing("BareFloat64").wrap_data(cls, &*RUST_FLOAT_64_WRAP)
     }
 
+    // BareFixedArray(BareFloat32)
+    // BareFixedArray(Union(BareFloat32, Uint))
     fn encode(input: AnyObject) -> RString {
         let rfloat64 = rtself.get_data_mut(&*RUST_FLOAT_64_WRAP);
         let mut bytes: Vec<u8> = vec![];
@@ -66,7 +73,7 @@ methods! {
         RString::from_bytes(&mut bytes, &Encoding::us_ascii())
     }
 
-    fn decode(to_decode: AnyObject) -> Float {
+    fn decode(to_decode: AnyObject) -> AnyObject {
         let safe = to_decode.unwrap().try_convert_to::<RString>().unwrap();
         let bytes = safe.to_bytes_unchecked();
         let rfloat64 = rtself.get_data_mut(&*RUST_FLOAT_64_WRAP);
