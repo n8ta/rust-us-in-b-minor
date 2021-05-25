@@ -4,7 +4,7 @@ use crate::{BareType, init};
 use crate::fixed_array::RustFixedArray;
 use std::rc::Rc;
 
-const NAME: &str = "F32";
+const NAME: &str = "Rust_F32";
 
 #[derive(Clone, Debug)]
 pub struct RustFloat32;

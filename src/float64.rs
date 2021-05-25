@@ -8,7 +8,7 @@ use std::rc::Rc;
 #[derive(Clone, Debug)]
 pub struct RustFloat64;
 
-const NAME: &str = "F64";
+const NAME: &str = "Rust_F64";
 
 type RustFloat64Rc = Rc<RustFloat64>;
 
@@ -28,7 +28,6 @@ impl BareType for RustFloat64 {
         return Ok(());
     }
     fn decode<'a>(&self, bytes: &'a [u8]) -> (&'a [u8], AnyObject) {
-        println!("float64 decoding...");
         let mut float_bs: [u8; 8] = [0; 8];
         for (float_bs_ref, value) in float_bs.iter_mut().zip(bytes) {
             *float_bs_ref = *value;
@@ -46,19 +45,17 @@ wrappable_struct! {
     mark(data) {}
 }
 
-class!(BareFloat64);
+class!(F64);
 
 methods! {
-    BareFloat64,
+    F64,
     rtself,
 
     fn new() -> AnyObject {
         let cls = Rc::new(RustFloat64::new());
-        Class::from_existing("BareFloat64").wrap_data(cls, &*RUST_FLOAT_64_WRAP)
+        Class::from_existing(NAME).wrap_data(cls, &*RUST_FLOAT_64_WRAP)
     }
 
-    // BareFixedArray(BareFloat32)
-    // BareFixedArray(Union(BareFloat32, Uint))
     fn encode(input: AnyObject) -> RString {
         let rfloat64 = rtself.get_data_mut(&*RUST_FLOAT_64_WRAP);
         let mut bytes: Vec<u8> = vec![];

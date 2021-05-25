@@ -12,7 +12,7 @@ pub struct RustFixedArray {
     array_type: Rc<dyn BareType>,
 }
 
-const NAME: &str = "ArrayFixedLen";
+const NAME: &str = "Rust_ArrayFixedLen";
 
 type RustFixedArrayRC = Rc<RustFixedArray>;
 
