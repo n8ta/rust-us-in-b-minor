@@ -1,11 +1,13 @@
 use rutie::{Class, AnyObject, Object, Float, RString, Encoding, AnyException};
 use lazy_static::lazy_static;
 use crate::BareType;
+use std::rc::Rc;
 
 
 #[derive(Clone, Debug)]
 pub struct RustFloat64;
 
+type RustFloat64Rc = Rc<RustFloat64>;
 
 impl RustFloat64 {
     pub fn new() -> Self {
@@ -34,24 +36,12 @@ impl BareType for RustFloat64 {
 }
 
 wrappable_struct! {
-    RustFloat64,
+    RustFloat64Rc,
     RustFloat64Wrap,
     RUST_FLOAT_64_WRAP,
 
-    mark(data) {
-        // GC::mark(&data.val)
-    }
+    mark(data) {}
 }
-
-// Rust functions should not panic into C -> into ruby
-//     ? turn it into a ruby exception ?
-
-// TryFrom can turn a [u8] into a [u8; 8]
-
-// SplitAt can take a slice and return two slices
-
-// Look at Byte Buffers - instead of [u8] + mut vec
-//      provides a stream to read from and to write too
 
 class!(BareFloat64);
 
@@ -60,7 +50,7 @@ methods! {
     rtself,
 
     fn new() -> AnyObject {
-        let cls = RustFloat64::new();
+        let cls = Rc::new(RustFloat64::new());
         Class::from_existing("BareFloat64").wrap_data(cls, &*RUST_FLOAT_64_WRAP)
     }
 
@@ -82,11 +72,13 @@ methods! {
     }
 
 }
+
 pub fn float64_init() {
     let data_class = Class::from_existing("Object");
     Class::new("BareFloat64", Some(&data_class)).define(|klass| {
         klass.def_self("new", new);
         klass.def("encode", encode);
         klass.def("decode", decode);
+        klass.const_set("BTYPE", &RString::new_utf8("F64"));
     });
 }

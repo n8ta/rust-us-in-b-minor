@@ -3,50 +3,32 @@ use lazy_static::lazy_static;
 use crate::BareType;
 use Box;
 
-use crate::into_rust::into_rust;
+use crate::into_rust::wrapper_to_rust_type;
+use std::rc::Rc;
+use crate::float32::RustFloat32;
 
-
-// Ideas:
-// 1. Create a table of pointers to each Type and lookup each ruby object's wrapped rust class in that table
-
-
-// VTable
-// for multiple children you get a struct with fields for each member function
-// You get a ptr into this table of tables
-// [
-//     { ... },
-//     {"name": 0x123, "blargh()": 0x22222 }
-// ]
-
-#[derive(Clone, Debug)]
 pub struct RustFixedArray {
     len: i64,
-    array_type: Box<dyn BareType>,
+    array_type: Rc<dyn BareType>,
 }
 
+type RustFixedArrayRC = Rc<RustFixedArray>;
+
 wrappable_struct! {
-    RustFixedArray,
+    RustFixedArrayRC,
     RustFixedArrayWrap,
     RUST_FIXED_ARRAY_WRAP,
 
-    mark(data) {
-        // GC::mark(&data.val)
-    }
+    mark(data) {}
 }
 
 impl RustFixedArray {
-    pub fn rust_new(len: i64, array_type: Box<dyn BareType>) -> Self {
-        RustFixedArray {
-            len,
-            array_type,
-        }
-    }
     pub fn new(val: Fixnum, typ: AnyObject) -> Self {
         let mut typ = typ.clone();
         println!("New Rust Fixed Array");
         let ret = RustFixedArray {
             len: val.to_i64(),
-            array_type: into_rust(&mut typ),
+            array_type: wrapper_to_rust_type(&mut typ)
         };
         ret
     }
@@ -80,7 +62,7 @@ methods! {
     rtself,
 
     fn new(input: Fixnum, typ: AnyObject) -> AnyObject {
-        let fixed_array = RustFixedArray::new(input.unwrap(), typ.unwrap());
+        let fixed_array = Rc::new(RustFixedArray::new(input.unwrap(), typ.unwrap()));
         let ret = Class::from_existing("BareFixedArray").wrap_data(fixed_array, &*RUST_FIXED_ARRAY_WRAP);
         ret
     }
@@ -108,5 +90,6 @@ pub fn fixed_array_init() {
         klass.def_self("new", new);
         klass.def("encode", encode);
         klass.def("decode", decode);
+        klass.const_set("BTYPE", &RString::new_utf8("FIXED_LEN_ARRAY"));
     });
 }

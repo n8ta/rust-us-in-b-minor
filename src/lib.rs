@@ -1,10 +1,20 @@
-mod fixed_array;
-mod float64;
-mod float32;
-mod into_rust;
-
+#[allow(unused_imports)]
 #[allow(warnings)]
 #[allow(dead_code)]
+mod fixed_array;
+#[allow(unused_imports)]
+#[allow(warnings)]
+#[allow(dead_code)]
+mod float64;
+#[allow(unused_imports)]
+#[allow(warnings)]
+#[allow(dead_code)]
+mod float32;
+#[allow(unused_imports)]
+#[allow(warnings)]
+#[allow(dead_code)]
+mod into_rust;
+
 
 #[macro_use]
 extern crate rutie;
@@ -18,9 +28,24 @@ use float32::float32_init;
 
 
 
-pub trait BareType: Clone {
+pub trait BareType {
     fn encode(&self, input: AnyObject, byte_output: &mut Vec<u8>) -> Result<(), AnyException>;
     fn decode<'a>(&self, bytes: &'a [u8]) -> (&'a [u8], AnyObject);
+}
+
+#[macro_export]
+macro_rules! init {
+    ($func_name:ident, $btype:expr, $ruby_name:expr) => {
+        pub fn $func_name() {
+            let data_class = Class::from_existing("Object");
+            Class::new(stringify!($ruby_name), Some(&data_class)).define(|klass| {
+                klass.def_self("new", new);
+                klass.def("encode", encode);
+                klass.def("decode", decode);
+                klass.const_set("BTYPE", &RString::new_utf8(stringify!($btype)));
+            });
+        };
+    }
 }
 
 #[allow(non_snake_case)]

@@ -1,6 +1,8 @@
 use rutie::{Class, AnyObject, Object, Float, RString, Encoding, AnyException};
 use lazy_static::lazy_static;
 use crate::BareType;
+use crate::fixed_array::RustFixedArray;
+use std::rc::Rc;
 
 
 #[derive(Clone, Debug)]
@@ -35,8 +37,10 @@ impl BareType for RustFloat32 {
     }
 }
 
+type RustFloat32Rc = Rc<RustFloat32>;
+
 wrappable_struct! {
-    RustFloat32,
+    RustFloat32Rc,
     RustFloat32Wrap,
     RUST_FLOAT_32_WRAP,
 
@@ -52,8 +56,7 @@ methods! {
     rtself,
 
     fn new() -> AnyObject {
-        let cls = RustFloat32::new();
-        Class::from_existing("BareFloat32").wrap_data(cls, &*RUST_FLOAT_32_WRAP)
+        Class::from_existing("BareFloat32").wrap_data(Rc::new(RustFloat32::new()), &*RUST_FLOAT_32_WRAP)
     }
 
     fn encode(input: AnyObject) -> RString {
@@ -78,5 +81,6 @@ pub fn float32_init() {
         klass.def_self("new", new);
         klass.def("encode", encode);
         klass.def("decode", decode);
+        klass.const_set("BTYPE", &RString::new_utf8("F32"));
     });
 }
