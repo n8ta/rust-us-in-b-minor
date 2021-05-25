@@ -1,6 +1,6 @@
 use rutie::{Class, AnyObject, Object, RString, Encoding, Fixnum, Array, AnyException};
 use lazy_static::lazy_static;
-use crate::BareType;
+use crate::{BareType, init};
 use Box;
 
 use crate::into_rust::wrapper_to_rust_type;
@@ -12,20 +12,20 @@ pub struct RustFixedArray {
     array_type: Rc<dyn BareType>,
 }
 
+const NAME: &str = "ArrayFixedLen";
+
 type RustFixedArrayRC = Rc<RustFixedArray>;
 
 wrappable_struct! {
     RustFixedArrayRC,
     RustFixedArrayWrap,
     RUST_FIXED_ARRAY_WRAP,
-
     mark(data) {}
 }
 
 impl RustFixedArray {
     pub fn new(val: Fixnum, typ: AnyObject) -> Self {
         let mut typ = typ.clone();
-        println!("New Rust Fixed Array");
         let ret = RustFixedArray {
             len: val.to_i64(),
             array_type: wrapper_to_rust_type(&mut typ)
@@ -35,7 +35,6 @@ impl RustFixedArray {
 }
 
 impl BareType for RustFixedArray {
-
     fn encode(&self, input: AnyObject, bytes: &mut Vec<u8>) -> std::result::Result<(),AnyException> {
         let array = input.try_convert_to::<Array>().unwrap();
         for idx in 0..self.len {
@@ -55,15 +54,15 @@ impl BareType for RustFixedArray {
     }
 }
 
-class!(BareFixedArray);
+class!(ArrayFixedLen);
 
 methods! {
-    BareFixedArray,
+    ArrayFixedLen,
     rtself,
 
     fn new(input: Fixnum, typ: AnyObject) -> AnyObject {
         let fixed_array = Rc::new(RustFixedArray::new(input.unwrap(), typ.unwrap()));
-        let ret = Class::from_existing("BareFixedArray").wrap_data(fixed_array, &*RUST_FIXED_ARRAY_WRAP);
+        let ret = Class::from_existing(NAME).wrap_data(fixed_array, &*RUST_FIXED_ARRAY_WRAP);
         ret
     }
 
@@ -84,12 +83,5 @@ methods! {
     }
 
 }
-pub fn fixed_array_init() {
-    let data_class = Class::from_existing("Object");
-    Class::new("BareFixedArray", Some(&data_class)).define(|klass| {
-        klass.def_self("new", new);
-        klass.def("encode", encode);
-        klass.def("decode", decode);
-        klass.const_set("BTYPE", &RString::new_utf8("FIXED_LEN_ARRAY"));
-    });
-}
+
+init!(fixed_array_init, NAME);

@@ -2,12 +2,12 @@ require 'rutie'
 
 Rutie.new(:barers).init 'bare_init', __dir__
 
-float32 = BareFloat32.new()
-float64 = BareFloat64.new()
+float32 = F32.new
+float64 = F64.new
 puts "Creating BareFixedArray(F32)"
-floatarr32 = BareFixedArray.new(3, float32)
+floatarr32 = ArrayFixedLen.new(3, float32)
 puts "Creating BareFixedArray(F64)"
-floatarr64 = BareFixedArray.new(3, float64)
+floatarr64 = ArrayFixedLen.new(3, float64)
 
 init = [1.1,2.2,3.3]
 encoded64 = floatarr64.encode(init)
@@ -26,7 +26,7 @@ decoded = float32.decode(encoded)
 puts "num: #{decoded} 1337.1337"
 
 
-float_arr_arr_64 = BareFixedArray.new(3, floatarr64)
+float_arr_arr_64 = ArrayFixedLen.new(3, floatarr64)
 twoD = [[1.1,1.2,1.3],[2.1,2.2,2.3],[3.1,3.2,3.3]]
 encoded = float_arr_arr_64.encode(twoD)
 decoded = float_arr_arr_64.decode(encoded)

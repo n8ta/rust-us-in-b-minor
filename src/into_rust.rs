@@ -5,7 +5,7 @@ use rutie::{Class, AnyObject, Object, Float, RString, Encoding, AnyException, Fi
 use lazy_static::lazy_static;
 use crate::BareType;
 use rutie::rubysys::vm::ruby_init;
-use crate::fixed_array::{BareFixedArray, RustFixedArray};
+use crate::fixed_array::{ArrayFixedLen, RustFixedArray};
 use std::rc::Rc;
 
 pub fn wrapper_to_rust_type(wrapped_rust_class: &mut AnyObject) -> Rc<dyn BareType> {
@@ -14,7 +14,7 @@ pub fn wrapper_to_rust_type(wrapped_rust_class: &mut AnyObject) -> Rc<dyn BareTy
     match btype {
         "F32" => wrapped_rust_class.get_data_mut(&*RUST_FLOAT_32_WRAP).clone(),
         "F64" => wrapped_rust_class.get_data_mut(&*RUST_FLOAT_64_WRAP).clone(),
-        "FIXED_LEN_ARRAY" => wrapped_rust_class.get_data_mut(&*RUST_FIXED_ARRAY_WRAP).clone(),
-        _ => panic!("That's not a bare type!")
+        "ArrayFixedLen" => wrapped_rust_class.get_data_mut(&*RUST_FIXED_ARRAY_WRAP).clone(),
+        _ => panic!("That's not a bare type! {}", btype)
     }
 }

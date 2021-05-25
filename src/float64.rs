@@ -1,11 +1,14 @@
 use rutie::{Class, AnyObject, Object, Float, RString, Encoding, AnyException};
 use lazy_static::lazy_static;
-use crate::BareType;
+use crate::{BareType, init};
 use std::rc::Rc;
+
 
 
 #[derive(Clone, Debug)]
 pub struct RustFloat64;
+
+const NAME: &str = "F64";
 
 type RustFloat64Rc = Rc<RustFloat64>;
 
@@ -73,12 +76,4 @@ methods! {
 
 }
 
-pub fn float64_init() {
-    let data_class = Class::from_existing("Object");
-    Class::new("BareFloat64", Some(&data_class)).define(|klass| {
-        klass.def_self("new", new);
-        klass.def("encode", encode);
-        klass.def("decode", decode);
-        klass.const_set("BTYPE", &RString::new_utf8("F64"));
-    });
-}
+init!(float64_init, NAME);

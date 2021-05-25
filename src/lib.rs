@@ -35,16 +35,16 @@ pub trait BareType {
 
 #[macro_export]
 macro_rules! init {
-    ($func_name:ident, $btype:expr, $ruby_name:expr) => {
+    ($func_name:ident, $btype:expr) => {
         pub fn $func_name() {
             let data_class = Class::from_existing("Object");
-            Class::new(stringify!($ruby_name), Some(&data_class)).define(|klass| {
+            Class::new($btype, Some(&data_class)).define(|klass| {
                 klass.def_self("new", new);
                 klass.def("encode", encode);
                 klass.def("decode", decode);
-                klass.const_set("BTYPE", &RString::new_utf8(stringify!($btype)));
+                klass.const_set("BTYPE", &RString::new_utf8($btype));
             });
-        };
+        }
     }
 }
 
