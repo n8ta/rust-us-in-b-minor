@@ -1,6 +1,6 @@
 use rutie::{Class, AnyObject, Object, Float, RString, Encoding, AnyException};
 use lazy_static::lazy_static;
-use crate::{BareType, init};
+use crate::{BareType, init, ruby_methods};
 use crate::fixed_array::RustFixedArray;
 use std::rc::Rc;
 
@@ -42,33 +42,15 @@ wrappable_struct! {
     RustFloat32Rc,
     RustFloat32Wrap,
     RUST_FLOAT_32_WRAP,
-
     mark(data) {}
 }
 
-class!(BareFloat64);
-
-methods! {
+ruby_methods!(
     BareFloat64,
-    rtself,
-
-    fn new() -> AnyObject {
+    RUST_FLOAT_32_WRAP,
+    fn new() {
         Class::from_existing(NAME).wrap_data(Rc::new(RustFloat32::new()), &*RUST_FLOAT_32_WRAP)
     }
+);
 
-    fn encode(input: AnyObject) -> RString {
-        let rfloat64 = rtself.get_data_mut(&*RUST_FLOAT_32_WRAP);
-        let mut bytes: Vec<u8> = vec![];
-        rfloat64.encode(input.unwrap(), &mut bytes);
-        RString::from_bytes(&mut bytes, &Encoding::us_ascii())
-    }
-
-    fn decode(to_decode: AnyObject) -> AnyObject {
-        let safe = to_decode.unwrap().try_convert_to::<RString>().unwrap();
-        let bytes = safe.to_bytes_unchecked();
-        let rfloat64 = rtself.get_data_mut(&*RUST_FLOAT_32_WRAP);
-        let (_, float) = rfloat64.decode(bytes);
-        return float
-    }
-}
 init!(float32_init, NAME);

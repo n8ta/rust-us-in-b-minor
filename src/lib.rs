@@ -27,7 +27,6 @@ use rutie::{AnyObject, AnyException};
 use float32::float32_init;
 
 
-
 pub trait BareType {
     fn encode(&self, input: AnyObject, byte_output: &mut Vec<u8>) -> Result<(), AnyException>;
     fn decode<'a>(&self, bytes: &'a [u8]) -> (&'a [u8], AnyObject);
@@ -46,6 +45,70 @@ macro_rules! init {
             });
         }
     }
+}
+
+
+/// Defines the ruby accessible encode and decode functions
+/// will also define .new() provided your new function doesn't take any args
+/// if new() does take args you'll have to call methods! yourself.
+/// see fixed_array.rs for an example.
+#[macro_export]
+macro_rules! ruby_methods {
+    // Case with a 0 arg new function
+    ($class_name:ident,
+    $wrap:ident,
+    fn new() $body:block
+    ) => {
+        class!($class_name);
+        methods! {
+            $class_name,
+            rtself,
+
+            fn encode(input: ::rutie::AnyObject) -> RString {
+                let rfloat64 = rtself.get_data_mut(&*$wrap);
+                let mut bytes: Vec<u8> = vec![];
+                rfloat64.encode(input.unwrap(), &mut bytes);
+                ::rutie::RString::from_bytes(&mut bytes, &Encoding::us_ascii())
+            }
+
+            fn decode(to_decode: ::rutie::AnyObject) -> AnyObject {
+                let safe = to_decode.unwrap().try_convert_to::<::rutie::RString>().unwrap();
+                let bytes = safe.to_bytes_unchecked();
+                let rfloat64 = rtself.get_data_mut(&*$wrap);
+                let (_, decoded) = rfloat64.decode(bytes);
+                return decoded
+            }
+
+            fn new() -> AnyObject {
+                $body
+            }
+        }
+    };
+    // No new function, you must call methods! yourself
+    ($class_name:ident,
+    $wrap:ident
+    ) => {
+        class!($class_name);
+        methods! {
+            $class_name,
+            rtself,
+
+            fn encode(input: ::rutie::AnyObject) -> RString {
+                let rfloat64 = rtself.get_data_mut(&*$wrap);
+                let mut bytes: Vec<u8> = vec![];
+                rfloat64.encode(input.unwrap(), &mut bytes);
+                ::rutie::RString::from_bytes(&mut bytes, &Encoding::us_ascii())
+            }
+
+            fn decode(to_decode: ::rutie::AnyObject) -> AnyObject {
+                let safe = to_decode.unwrap().try_convert_to::<::rutie::RString>().unwrap();
+                let bytes = safe.to_bytes_unchecked();
+                let rfloat64 = rtself.get_data_mut(&*$wrap);
+                let (_, decoded) = rfloat64.decode(bytes);
+                return decoded
+            }
+        }
+    };
 }
 
 #[allow(non_snake_case)]

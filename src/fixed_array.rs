@@ -1,6 +1,6 @@
 use rutie::{Class, AnyObject, Object, RString, Encoding, Fixnum, Array, AnyException};
 use lazy_static::lazy_static;
-use crate::{BareType, init};
+use crate::{BareType, init, ruby_methods};
 use Box;
 
 use crate::into_rust::wrapper_to_rust_type;
@@ -54,34 +54,20 @@ impl BareType for RustFixedArray {
     }
 }
 
-class!(ArrayFixedLen);
+
+ruby_methods!(
+    ArrayFixedLen,
+    RUST_FIXED_ARRAY_WRAP
+);
 
 methods! {
     ArrayFixedLen,
     rtself,
-
     fn new(input: Fixnum, typ: AnyObject) -> AnyObject {
         let fixed_array = Rc::new(RustFixedArray::new(input.unwrap(), typ.unwrap()));
         let ret = Class::from_existing(NAME).wrap_data(fixed_array, &*RUST_FIXED_ARRAY_WRAP);
         ret
     }
-
-    fn encode(message: AnyObject) -> RString {
-        let array = rtself.get_data_mut(&*RUST_FIXED_ARRAY_WRAP);
-        let mut bytes = vec![];
-        array.encode(message.unwrap(),
-                         &mut bytes);
-        RString::from_bytes(bytes.as_slice(), &Encoding::us_ascii())
-    }
-
-    fn decode(to_decode: RString) -> AnyObject {
-        let rstr = to_decode.unwrap().try_convert_to::<RString>().unwrap();
-        let mut bytes = rstr.to_bytes_unchecked();
-        let array = rtself.get_data_mut(&*RUST_FIXED_ARRAY_WRAP);
-        let (_, array) = array.decode(bytes);
-        array
-    }
-
 }
 
 init!(fixed_array_init, NAME);

@@ -1,6 +1,8 @@
 class Bare
+
   require 'rutie'
   Rutie.new(:barers).init 'bare_init', __dir__
+
   def self.F32
     Rust_F32.new()
   end
@@ -12,4 +14,3 @@ class Bare
   end
 
 end
-
