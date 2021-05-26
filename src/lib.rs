@@ -47,14 +47,8 @@ macro_rules! init {
     }
 }
 
-
-/// Defines the ruby accessible encode and decode functions
-/// will also define .new() provided your new function doesn't take any args
-/// if new() does take args you'll have to call methods! yourself.
-/// see fixed_array.rs for an example.
 #[macro_export]
 macro_rules! ruby_methods {
-    // Case with a 0 arg new function
     ($class_name:ident,
     $wrap:ident,
     fn new(  $($arg:ident : $argt:ty),* $(,)?   )
