@@ -57,17 +57,13 @@ impl BareType for RustFixedArray {
 
 ruby_methods!(
     ArrayFixedLen,
-    RUST_FIXED_ARRAY_WRAP
-);
-
-methods! {
-    ArrayFixedLen,
-    rtself,
-    fn new(input: Fixnum, typ: AnyObject) -> AnyObject {
+    RUST_FIXED_ARRAY_WRAP,
+    fn new(input: Fixnum, typ: AnyObject) {
         let fixed_array = Rc::new(RustFixedArray::new(input.unwrap(), typ.unwrap()));
         let ret = Class::from_existing(NAME).wrap_data(fixed_array, &*RUST_FIXED_ARRAY_WRAP);
         ret
     }
-}
+);
+
 
 init!(fixed_array_init, NAME);
