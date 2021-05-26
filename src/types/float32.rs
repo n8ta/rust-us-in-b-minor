@@ -1,7 +1,6 @@
-use rutie::{Class, AnyObject, Object, Float, RString, Encoding, AnyException};
+use rutie::{Class, AnyObject, Object, Float, RString, Encoding, AnyException, Fixnum};
 use lazy_static::lazy_static;
 use crate::{BareType, init, ruby_methods};
-use crate::fixed_array::RustFixedArray;
 use std::rc::Rc;
 
 const NAME: &str = "Rust_F32";
@@ -18,8 +17,15 @@ impl RustFloat32 {
 
 impl BareType for RustFloat32 {
     fn encode(&self, fl: AnyObject, bytes: &mut Vec<u8>) -> Result<(), AnyException> {
-        let fl = fl.try_convert_to::<Float>()?.to_f64();
-        let fl32 = fl as f32;
+        let int = fl.try_convert_to::<Fixnum>();
+        let fl = fl.try_convert_to::<Float>();  // ?.to_f64();
+        let float;
+        if fl.is_ok() {
+            float = fl.unwrap().to_f64();
+        } else {
+            float = int?.to_i64() as f64;
+        }
+        let fl32 = float as f32;
         let fl32_bytes = fl32.to_le_bytes();
         for idx in 0..4 {
             bytes.push(fl32_bytes[idx]);

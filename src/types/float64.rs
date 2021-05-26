@@ -1,4 +1,4 @@
-use rutie::{Class, AnyObject, Object, Float, RString, Encoding, AnyException};
+use rutie::{Class, AnyObject, Object, Float, RString, Encoding, AnyException, Fixnum};
 use lazy_static::lazy_static;
 use crate::{BareType, init, ruby_methods};
 use std::rc::Rc;
@@ -20,8 +20,15 @@ impl RustFloat64 {
 
 impl BareType for RustFloat64 {
     fn encode(&self, fl: AnyObject, bytes: &mut Vec<u8>) -> Result<(),AnyException> {
-        let fl = fl.try_convert_to::<Float>()?;
-        let f64_bytes = fl.to_f64().to_le_bytes();
+        let int = fl.try_convert_to::<Fixnum>();
+        let fl = fl.try_convert_to::<Float>();
+        let float;
+        if fl.is_ok() {
+            float = fl.unwrap().to_f64();
+        } else {
+            float = int?.to_i64() as f64;
+        }
+        let f64_bytes = float.to_le_bytes();
         for idx in 0..8 {
             bytes.push(f64_bytes[idx]);
         }

@@ -1,11 +1,9 @@
-use crate::float32::{RUST_FLOAT_32_WRAP};
-use crate::float64::{RUST_FLOAT_64_WRAP};
-use crate::fixed_array::{RUST_FIXED_ARRAY_WRAP};
+use crate::types::float32::{RUST_FLOAT_32_WRAP};
+use crate::types::float64::{RUST_FLOAT_64_WRAP};
+use crate::types::fixed_array::{RUST_FIXED_ARRAY_WRAP};
 
-use rutie::{Class, AnyObject, Object, Float, RString, Encoding, AnyException, Fixnum};
-use lazy_static::lazy_static;
+use rutie::{AnyObject, Object, RString};
 use crate::BareType;
-use rutie::rubysys::vm::ruby_init;
 
 use std::rc::Rc;
 

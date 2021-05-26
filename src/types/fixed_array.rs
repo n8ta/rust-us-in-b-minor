@@ -5,7 +5,6 @@ use Box;
 
 use crate::into_rust::wrapper_to_rust_type;
 use std::rc::Rc;
-use crate::float32::RustFloat32;
 
 pub struct RustFixedArray {
     len: i64,
@@ -53,7 +52,6 @@ impl BareType for RustFixedArray {
         (bytes, array.into())
     }
 }
-
 
 ruby_methods!(
     ArrayFixedLen,

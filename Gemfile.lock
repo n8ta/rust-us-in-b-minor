@@ -1,0 +1,23 @@
+PATH
+  remote: .
+  specs:
+    rutie_ruby_example (1.0)
+      minitest (~> 5.14.4)
+      rutie (~> 0.0.3)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    minitest (5.14.4)
+    rutie (0.0.4)
+
+PLATFORMS
+  x86_64-darwin-18
+
+DEPENDENCIES
+  minitest
+  rutie (~> 0.0.3)
+  rutie_ruby_example!
+
+BUNDLED WITH
+   2.2.15

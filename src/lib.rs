@@ -1,18 +1,7 @@
 #[allow(unused_imports)]
 #[allow(warnings)]
 #[allow(dead_code)]
-mod fixed_array;
-#[allow(unused_imports)]
-#[allow(warnings)]
-#[allow(dead_code)]
-mod float64;
-#[allow(unused_imports)]
-#[allow(warnings)]
-#[allow(dead_code)]
-mod float32;
-#[allow(unused_imports)]
-#[allow(warnings)]
-#[allow(dead_code)]
+mod types;
 mod into_rust;
 
 
@@ -21,10 +10,12 @@ extern crate rutie;
 
 extern crate lazy_static;
 
-use float64::float64_init;
-use fixed_array::fixed_array_init;
+use types::float64::float64_init;
+use types::fixed_array::fixed_array_init;
+use types::float32::float32_init;
+
 use rutie::{AnyObject, AnyException};
-use float32::float32_init;
+
 
 
 pub trait BareType {
@@ -62,9 +53,9 @@ macro_rules! ruby_methods {
             rtself,
 
             fn encode(input: ::rutie::AnyObject) -> RutieRString {
-                let rfloat64 = rtself.get_data_mut(&*$wrap);
+                let rust_class = rtself.get_data_mut(&*$wrap);
                 let mut bytes: Vec<u8> = vec![];
-                rfloat64.encode(input.unwrap(), &mut bytes);
+                rust_class.encode(input.unwrap(), &mut bytes);
                 ::rutie::RString::from_bytes(&mut bytes, &Encoding::us_ascii())
             }
 
