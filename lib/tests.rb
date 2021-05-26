@@ -15,11 +15,10 @@ class TestBare < Minitest::Test
 
       binary_encoded = Bare.encode(input, schema)
       assert_equal binary_encoded, oracle_binary
-      # output = Bare.decode(binary_encoded, schema)
-      # output_oracle = schema.decode(oracle_binary)
-      #
-      # assert_equal output, input
-      # assert_equal output, output_oracle
+      output = Bare.decode(binary_encoded, schema)
+      output_oracle = schema.decode(oracle_binary)
+      assert_equal output, input
+      assert_equal output, output_oracle
     end
   end
 
@@ -39,6 +38,7 @@ class TestBare < Minitest::Test
   end
 
   def _test_bool
+    skip
     self.enc_dec([
                    [true, "\xFF\xFF".b, Bare.Bool],
                    [false, "\x00\x00".b, Bare.Bool]]
@@ -198,6 +198,7 @@ class TestBare < Minitest::Test
                    [{ type: Bare.U16, value: 5 }, "\x01\x05\x00".b, Bare.Union({ 0 => Bare.Uint, 1 => Bare.U16 })],
                    [{ type: Bare.DataFixedLen(6), value: "\xFF\xFF\x00\x00\xFF\xFF".b }, "\x04\xFF\xFF\x00\x00\xFF\xFF".b, Bare.Union({ 4 => Bare.DataFixedLen(6) })],
                    [{ type: Bare.DataFixedLen(6), value: "\xFF\xFF\x00\x00\xFF\xFF".b }, "\x09\xFF\xFF\x00\x00\xFF\xFF".b, Bare.Union({ 4 => Bare.Uint, 9 => Bare.DataFixedLen(6) })],
+                   [{ type: Bare.Uint, value: 5 }, "\x00\x05".b, Bare.Union({ 0 => Bare.Uint, 1 => Bare.Void })],
                  ])
   end
 
@@ -271,11 +272,6 @@ class TestBare < Minitest::Test
                  ])
   end
 
-  def _test_union
-    self.enc_dec([
-                   [{ type: Bare.Uint, value: 5 }, "\x00\x05".b, Bare.Union({ 0 => Bare.Uint, 1 => Bare.Void })],
-                 ])
-  end
 end
 
 # starting = Time.now
