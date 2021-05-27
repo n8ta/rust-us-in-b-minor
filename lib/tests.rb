@@ -175,9 +175,9 @@ class TestBare < Minitest::Test
                  ])
   end
 
-  def _test_array_fix_len
+  def test_array_fix_len
     self.enc_dec([
-                   [[1, 2, 3], "\x01\x02\x03".b, Bare.ArrayFixedLen(Bare.U8, 3)],
+                   [[1, 2, 3], "\x01\x02\x03".b, Bare.ArrayFixedLen(Bare.I8, 3)],
                    [[-3, -500, -5000000], "\xFD\xFF\xFF\xFF\xFF\xFF\xFF\xFF\x0C\xFE\xFF\xFF\xFF\xFF\xFF\xFF\xC0\xB4\xB3\xFF\xFF\xFF\xFF\xFF".b, Bare.ArrayFixedLen(Bare.I64, 3)],
                  ])
 

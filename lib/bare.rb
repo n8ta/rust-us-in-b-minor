@@ -15,8 +15,8 @@ class Bare
   def self.F64
     Rust_F64.new
   end
-  def self.ArrayFixedLen(size, type)
-    Rust_ArrayFixedLen.new(size, type)
+  def self.ArrayFixedLen(type, size)
+    Rust_ArrayFixedLen.new(type, size)
   end
 
   def self.Uint()
