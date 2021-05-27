@@ -10,17 +10,38 @@ class Bare
   end
 
   def self.F32
-    Rust_F32.new()
+    Rust_F32.new
   end
   def self.F64
-    Rust_F64.new()
+    Rust_F64.new
   end
   def self.ArrayFixedLen(size, type)
     Rust_ArrayFixedLen.new(size, type)
   end
 
   def self.Uint()
-    Rust_Uint.new()
+    Rust_Uint.new
+  end
+
+  def self.Int()
+    Rust_Int.new
+  end
+
+  def self.Array(typ)
+    Rust_Array.new typ
+  end
+
+  def self.I8
+    Rust_I8.new
+  end
+  def self.I16
+    Rust_I16.new
+  end
+  def self.I32
+    Rust_I32.new
+  end
+  def self.I64
+    Rust_I64.new
   end
 
 end

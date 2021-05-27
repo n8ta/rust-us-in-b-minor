@@ -14,6 +14,12 @@ use types::float64::float64_init;
 use types::fixed_array::fixed_array_init;
 use types::float32::float32_init;
 use types::uint::uint_init;
+use types::int::int_init;
+use types::array::array_init;
+use types::i8::i8_init;
+use types::i16::i16_init;
+use types::i32::i32_init;
+use types::i64::i64_init;
 
 use rutie::{AnyObject, AnyException};
 
@@ -82,4 +88,10 @@ pub extern "C" fn bare_init() {
     float64_init();
     float32_init();
     uint_init();
+    int_init();
+    array_init();
+    i8_init();
+    i16_init();
+    i32_init();
+    i64_init();
 }

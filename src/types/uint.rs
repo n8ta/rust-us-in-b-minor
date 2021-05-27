@@ -121,12 +121,13 @@ impl BareType for RustUint {
         let mut i = 0;
         while let Some(byte) = bytes.get(i) {
             result = result | (((byte & 0b0111_1111) as u64) << (i * 7));
+            i += 1;
             if byte & 0b1000_0000 == 0 {
                 break;
             }
-            i += 1
+
         }
-        (bytes, Fixnum::new(result as i64).into())
+        (&bytes[i..], Fixnum::new(result as i64).into())
     }
 }
 
