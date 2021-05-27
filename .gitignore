@@ -1,4 +1,5 @@
 /.bundle/
+vendor
 .idea/*
 .idea
 /.yardoc
