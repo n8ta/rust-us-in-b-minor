@@ -19,4 +19,8 @@ class Bare
     Rust_ArrayFixedLen.new(size, type)
   end
 
+  def self.Uint()
+    Rust_Uint.new()
+  end
+
 end

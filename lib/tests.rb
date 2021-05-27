@@ -138,7 +138,7 @@ class TestBare < Minitest::Test
                  ])
   end
 
-  def _test_uint
+  def test_uint
     self.enc_dec([
                    [127, "\x7F".b, Bare.Uint],
                    [1, "\x01".b, Bare.Uint],

@@ -13,6 +13,7 @@ extern crate lazy_static;
 use types::float64::float64_init;
 use types::fixed_array::fixed_array_init;
 use types::float32::float32_init;
+use types::uint::uint_init;
 
 use rutie::{AnyObject, AnyException};
 
@@ -79,5 +80,6 @@ macro_rules! ruby_methods {
 pub extern "C" fn bare_init() {
     fixed_array_init();
     float64_init();
-    float32_init()
+    float32_init();
+    uint_init();
 }
