@@ -19,10 +19,10 @@ use types::array::array_init;
 use types::i8::i8_init;
 use types::i16::i16_init;
 use types::i32::i32_init;
+use types::optional::opt_init;
 use types::i64::i64_init;
-
+use types::data_fixed_len::fixed_data_init;
 use rutie::{AnyObject, AnyException};
-
 
 
 pub trait BareType {
@@ -81,6 +81,36 @@ macro_rules! ruby_methods {
     }
 }
 
+
+#[macro_export]
+macro_rules! ruby_methods_no_encode {
+    ($class_name:ident,
+    $wrap:ident,
+    fn new(  $($arg:ident : $argt:ty),* $(,)?   )
+        $body:block
+    ) => {
+        class!($class_name);
+        type RutieAny = ::rutie::AnyObject;
+        type RutieRString = ::rutie::RString;
+        methods! {
+            $class_name,
+            rtself,
+
+            fn decode(to_decode: ::rutie::AnyObject) -> RutieAny {
+                let safe = to_decode.unwrap().try_convert_to::<::rutie::RString>().unwrap();
+                let bytes = safe.to_bytes_unchecked();
+                let rfloat64 = rtself.get_data_mut(&*$wrap);
+                let (_, decoded) = rfloat64.decode(bytes);
+                return decoded
+            }
+
+            fn new(  $($arg: $argt),* ) -> RutieAny
+                $body
+
+        }
+    }
+}
+
 #[allow(non_snake_case)]
 #[no_mangle]
 pub extern "C" fn bare_init() {
@@ -94,4 +124,6 @@ pub extern "C" fn bare_init() {
     i16_init();
     i32_init();
     i64_init();
+    opt_init();
+    fixed_data_init();
 }

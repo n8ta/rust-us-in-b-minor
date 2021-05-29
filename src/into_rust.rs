@@ -9,6 +9,8 @@ use crate::types::i8::{RUST_I8_WRAP};
 use crate::types::i16::{RUST_I16_WRAP};
 use crate::types::i32::{RUST_I32_WRAP};
 use crate::types::i64::{RUST_I64_WRAP};
+use crate::types::optional::{RUST_OPT_WRAP};
+use crate::types::data_fixed_len::{RUST_FIXED_DATA_WRAP};
 
 use rutie::{AnyObject, Object, RString};
 use crate::BareType;
@@ -29,6 +31,8 @@ pub fn wrapper_to_rust_type(wrapped_rust_class: &mut AnyObject) -> Rc<dyn BareTy
         "Rust_I16" => wrapped_rust_class.get_data_mut(&*RUST_I16_WRAP).clone(),
         "Rust_I32" => wrapped_rust_class.get_data_mut(&*RUST_I32_WRAP).clone(),
         "Rust_I64" => wrapped_rust_class.get_data_mut(&*RUST_I64_WRAP).clone(),
+        "Rust_Opt" => wrapped_rust_class.get_data_mut(&*RUST_OPT_WRAP).clone(),
+        "Rust_DataFixedLen" => wrapped_rust_class.get_data_mut(&*RUST_FIXED_DATA_WRAP).clone(),
         _ => panic!("That's not a bare type! {}", btype)
     }
 }

@@ -1,5 +1,6 @@
 class Bare
   require 'rutie'
+
   Rutie.new(:barers).init 'bare_init', __dir__
 
   def self.encode(msg, schema)
@@ -43,5 +44,11 @@ class Bare
   def self.I64
     Rust_I64.new
   end
+  def self.Optional(typ)
+    Rust_Opt.new(typ)
+  end
 
+  def self.DataFixedLen(len)
+    Rust_DataFixedLen.new(len)
+  end
 end
