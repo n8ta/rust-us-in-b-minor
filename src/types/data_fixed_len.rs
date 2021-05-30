@@ -46,7 +46,7 @@ impl BareType for RustFixedData {
     }
 }
 
-ruby_methods_no_encode!(
+ruby_methods!(
     DataFixedLen,
     RUST_FIXED_DATA_WRAP,
     fn new(input: Fixnum) {
@@ -55,17 +55,6 @@ ruby_methods_no_encode!(
         ret
     }
 );
-
-type RutieRString = ::rutie::RString;
-
-methods! {
-    DataFixedLen,
-    rtself,
-    fn encode(input: ::rutie::AnyObject) -> RutieRString {
-        let str = input.unwrap().try_convert_to::<RString>().unwrap();
-        str.to_bytes_unchecked()
-    }
-}
 
 
 init!(fixed_data_init, NAME);
