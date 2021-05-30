@@ -7,8 +7,7 @@ def movie_in_chunks(chunk_size)
     result.append(file.read(chunk_size))
   end
   file.close
-  result = result[0..result.length-2]
-  result
+  result[0..result.length-2]
 end
 
 def test_ruby_4(data)
