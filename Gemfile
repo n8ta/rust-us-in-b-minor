@@ -7,4 +7,6 @@ gemspec
 
 gem 'minitest'
 # gem "rake", "~> 13.0"
+gem 'concurrent-ruby'
+gem 'bare-rb'
 gem 'rutie', '~> 0.0.3'

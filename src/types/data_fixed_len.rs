@@ -34,9 +34,7 @@ impl BareType for RustFixedData {
     fn encode(&self, input: AnyObject, bytes: &mut Vec<u8>) -> std::result::Result<(),AnyException> {
         let rstr = input.try_convert_to::<RString>()?;
         let data = rstr.to_bytes_unchecked();
-        for byte in data[0..self.len].iter() {
-            bytes.push(*byte)
-        }
+        bytes.extend(&data[0..self.len]);
         Result::Ok(())
     }
     fn decode<'a>(&self, bytes: &'a [u8]) -> (&'a [u8], AnyObject) {
