@@ -1,29 +1,30 @@
+mod into_rust;
 #[allow(unused_imports)]
 #[allow(warnings)]
 #[allow(dead_code)]
 mod types;
-mod into_rust;
-
 
 #[macro_use]
 extern crate rutie;
 
 extern crate lazy_static;
 
-use types::float64::float64_init;
+use types::array::array_init;
 use types::fixed_array::fixed_array_init;
 use types::float32::float32_init;
-use types::uint::uint_init;
-use types::int::int_init;
-use types::array::array_init;
-use types::i8::i8_init;
+use types::float64::float64_init;
 use types::i16::i16_init;
 use types::i32::i32_init;
 use types::i64::i64_init;
+use types::i8::i8_init;
+use types::int::int_init;
+use types::u16::u16_init;
+use types::u32::u32_init;
+use types::u64::u64_init;
+use types::u8::u8_init;
+use types::uint::uint_init;
 
-use rutie::{AnyObject, AnyException};
-
-
+use rutie::{AnyException, AnyObject};
 
 pub trait BareType {
     fn encode(&self, input: AnyObject, byte_output: &mut Vec<u8>) -> Result<(), AnyException>;
@@ -42,7 +43,7 @@ macro_rules! init {
                 klass.const_set("BTYPE", &RString::new_utf8($btype));
             });
         }
-    }
+    };
 }
 
 #[macro_export]
@@ -94,4 +95,8 @@ pub extern "C" fn bare_init() {
     i16_init();
     i32_init();
     i64_init();
+    u8_init();
+    u16_init();
+    u32_init();
+    u64_init();
 }
