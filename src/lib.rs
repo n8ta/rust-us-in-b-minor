@@ -12,6 +12,7 @@ extern crate lazy_static;
 use rutie::{AnyException, AnyObject};
 use types::array::array_init;
 use types::data_fixed_len::fixed_data_init;
+use types::enm::enum_init;
 use types::fixed_array::fixed_array_init;
 use types::float32::float32_init;
 use types::float64::float64_init;
@@ -19,6 +20,7 @@ use types::i16::i16_init;
 use types::i32::i32_init;
 use types::i64::i64_init;
 use types::optional::opt_init;
+use types::strct::struct_init;
 use types::union::union_init;
 
 use types::i8::i8_init;
@@ -134,4 +136,6 @@ pub extern "C" fn bare_init() {
     u32_init();
     u64_init();
     union_init();
+    struct_init();
+    enum_init();
 }

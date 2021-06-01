@@ -16,6 +16,8 @@ use crate::types::u32::RUST_U32_WRAP;
 use crate::types::u64::RUST_U64_WRAP;
 use crate::types::u8::RUST_U8_WRAP;
 use crate::types::union::RUST_UNION_WRAP;
+use crate::types::strct::RUST_STRUCT_WRAP;
+use crate::types::enm::RUST_ENUM_WRAP;
 
 use crate::BareType;
 use rutie::{AnyObject, Object, RString};
@@ -37,6 +39,8 @@ pub fn wrapper_to_rust_type(wrapped_rust_class: &mut AnyObject) -> Rc<dyn BareTy
         "Rust_Int" => wrapped_rust_class.get_data_mut(&*RUST_INT_WRAP).clone(),
         "Rust_Array" => wrapped_rust_class.get_data_mut(&*RUST_ARRAY_WRAP).clone(),
         "Rust_Union" => wrapped_rust_class.get_data_mut(&*RUST_UNION_WRAP).clone(),
+        "Rust_Struct" => wrapped_rust_class.get_data_mut(&*RUST_STRUCT_WRAP).clone(),
+        "Rust_Enum" => wrapped_rust_class.get_data_mut(&*RUST_ENUM_WRAP).clone(),
         "Rust_I8" => wrapped_rust_class.get_data_mut(&*RUST_I8_WRAP).clone(),
         "Rust_I16" => wrapped_rust_class.get_data_mut(&*RUST_I16_WRAP).clone(),
         "Rust_I32" => wrapped_rust_class.get_data_mut(&*RUST_I32_WRAP).clone(),

@@ -36,6 +36,14 @@ class Bare
     Rust_Union.new types
   end
 
+  def self.Struct(hash)
+    Rust_Struct.new hash
+  end
+
+  def self.Enum(hash)
+    Rust_Enum.new hash
+  end
+
   def self.I8
     Rust_I8.new
   end

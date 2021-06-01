@@ -204,7 +204,7 @@ class TestBare < Minitest::Test
                  ])
   end
 
-  def _test_enum
+  def test_enum
     testing_hash = { 1 => "abc", 5 => :cow, 16382 => 123 }
     self.enc_dec([
                    [:cow, "\x05".b, Bare.Enum(testing_hash)],
@@ -244,7 +244,7 @@ class TestBare < Minitest::Test
                  ])
   end
 
-  def _test_struct
+  def test_struct
     testing_hash = { 1 => "abc", 5 => :cow, 16382 => 123 }
     struct_def = { int: Bare.U8, uint: Bare.Uint, enum: Bare.Enum(testing_hash) }
     struct_def2 = { int: Bare.U8,
