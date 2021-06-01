@@ -233,7 +233,7 @@ class TestBare < Minitest::Test
                    [{ type: Bare.U16, value: 5 }, "\x01\x05\x00".b, Bare.Union({ 0 => Bare.Uint, 1 => Bare.U16 })],
                    [{ type: Bare.DataFixedLen(6), value: "\xFF\xFF\x00\x00\xFF\xFF".b }, "\x04\xFF\xFF\x00\x00\xFF\xFF".b, Bare.Union({ 4 => Bare.DataFixedLen(6) })],
                    [{ type: Bare.DataFixedLen(6), value: "\xFF\xFF\x00\x00\xFF\xFF".b }, "\x09\xFF\xFF\x00\x00\xFF\xFF".b, Bare.Union({ 4 => Bare.Uint, 9 => Bare.DataFixedLen(6) })],
-                  #  [{ type: Bare.Uint, value: 5 }, "\x00\x05".b, Bare.Union({ 0 => Bare.Uint, 1 => Bare.Void })],
+                   [{ type: Bare.Uint, value: 5 }, "\x00\x05".b, Bare.Union({ 0 => Bare.Uint, 1 => Bare.Void })],
                  ])
   end
 
@@ -288,7 +288,7 @@ class TestBare < Minitest::Test
                  ])
   end
 
-  def _test_void
+  def test_void
     self.enc_dec([
                    [{ type: Bare.Void }, "\x01".b, Bare.Union({ 0 => Bare.Uint, 1 => Bare.Void })],
                  ])

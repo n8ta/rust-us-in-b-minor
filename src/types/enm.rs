@@ -62,7 +62,7 @@ wrappable_struct! {
 }
 
 ruby_methods!(
-    BareStruct,
+    BareEnum,
     RUST_ENUM_WRAP,
     fn new(hash: AnyObject) {
         Class::from_existing(NAME)

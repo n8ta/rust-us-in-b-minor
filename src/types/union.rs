@@ -31,11 +31,11 @@ impl BareType for RustUnion {
         let hash = hash.try_convert_to::<rutie::Hash>()?;
         let mut typ = hash.at(&Symbol::new("type"));
         let value = hash.at(&Symbol::new("value"));
-        // validate presence of type and value in ruby "union"
-        if typ.is_nil() || value.is_nil() {
+        // validate presence of type. Value can be nil (void type)
+        if typ.is_nil() {
             return Err(AnyException::new(
                 "StandardError",
-                Some("Type and value must be specified for union."),
+                Some("Type must be specified for union."),
             ));
         }
         // find the uint for this type
@@ -69,7 +69,10 @@ impl BareType for RustUnion {
         let (bytes, value) = bare_type.decode(bytes);
         let mut hash = rutie::Hash::new();
         hash.store(Symbol::new("type"), typ.class());
-        hash.store(Symbol::new("value"), value);
+        // Ruby hashes are implicitly nil.
+        if !value.is_nil() {
+            hash.store(Symbol::new("value"), value);
+        }
         (bytes, hash.into())
     }
 }

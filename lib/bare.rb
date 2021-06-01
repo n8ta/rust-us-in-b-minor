@@ -80,6 +80,10 @@ class Bare
     Rust_Bool.new
   end
 
+  def self.Void
+    Rust_Void.new
+  end
+
   def self.DataFixedLen(len)
     Rust_DataFixedLen.new(len)
   end

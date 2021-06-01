@@ -43,7 +43,7 @@ wrappable_struct! {
 }
 
 ruby_methods!(
-    BareU8,
+    BareBool,
     RUST_BOOL_WRAP,
     fn new() {
         Class::from_existing(NAME).wrap_data(Rc::new(RustBool::new()), &*RUST_BOOL_WRAP)
