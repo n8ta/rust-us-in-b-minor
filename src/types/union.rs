@@ -11,18 +11,21 @@ const NAME: &str = "Rust_Union";
 
 #[derive(Clone /* Debug */)]
 pub struct RustUnion {
-    mapping: HashMap<usize, AnyObject>,
+    int_to_type: rutie::Hash,
+    type_to_int: rutie::Hash,
 }
 
 impl RustUnion {
     pub fn new(types: AnyObject) -> Self {
-        let types = types.try_convert_to::<rutie::Hash>().unwrap();
-        let mut mapping = HashMap::new();
-        types.each(|key, mut typ| {
-            let key = key.try_convert_to::<Integer>().unwrap().to_u64() as usize;
-            mapping.insert(key, typ.clone());
+        let int_to_type = types.try_convert_to::<rutie::Hash>().unwrap();
+        let mut type_to_int = rutie::Hash::new();
+        int_to_type.each(|int, typ| {
+            type_to_int.store(typ.class(), int);
         });
-        RustUnion { mapping }
+        RustUnion {
+            int_to_type,
+            type_to_int,
+        }
     }
 }
 
@@ -35,35 +38,28 @@ impl BareType for RustUnion {
         if typ.is_nil() {
             return Err(AnyException::new(
                 "StandardError",
-                Some("Type must be specified for union."),
+                Some("Type was not specified for union value."),
             ));
         }
         // find the uint for this type
         let type_key = self
-            .mapping
-            .iter()
-            .find_map(|(key, val)| (val.class() == typ.class()).then(|| *key))
-            .ok_or_else(|| {
-                AnyException::new(
-                    "StandardError",
-                    Some("Type found not specified by union definition."),
-                )
-            })?;
-        // encode
+            .type_to_int
+            .at(&typ.class())
+            .try_convert_to::<Integer>()?;
         let bare_type = into_rust::wrapper_to_rust_type(&mut typ);
-        RustUint.encode(Integer::from(type_key as u64).into(), bytes);
+        RustUint.encode(type_key.into(), bytes);
         bare_type.encode(value, bytes);
         Ok(())
     }
 
     fn decode<'a>(&self, bytes: &'a [u8]) -> (&'a [u8], AnyObject) {
         let (bytes, type_key) = RustUint.decode(bytes);
-        let type_key = type_key.try_convert_to::<Integer>().unwrap().to_u64() as usize;
-        let mut typ = self
-            .mapping
-            .get(&type_key)
-            .unwrap_or_else(|| panic!("Type key not found in union definition: {}", type_key))
-            .clone();
+        let type_key = type_key.try_convert_to::<Integer>().unwrap();
+        let mut typ = self.int_to_type.at(&type_key);
+
+        if typ.is_nil() {
+            panic!("Invalid type specified for union: {}", type_key.to_u64());
+        }
 
         let bare_type = into_rust::wrapper_to_rust_type(&mut typ);
         let (bytes, value) = bare_type.decode(bytes);
