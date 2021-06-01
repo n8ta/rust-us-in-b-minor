@@ -1,5 +1,7 @@
 pub(crate) mod array;
+pub(crate) mod bool;
 pub(crate) mod data_fixed_len;
+pub(crate) mod enm;
 pub(crate) mod fixed_array;
 pub(crate) mod float32;
 pub(crate) mod float64;
@@ -16,4 +18,3 @@ pub(crate) mod u64;
 pub(crate) mod u8;
 pub(crate) mod uint;
 pub(crate) mod union;
-pub(crate) mod enm;

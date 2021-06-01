@@ -83,7 +83,7 @@ class TestBare < Minitest::Test
                  ])
   end
 
-  def _test_bool
+  def test_bool
     skip
     self.enc_dec([
                    [true, "\xFF\xFF".b, Bare.Bool],

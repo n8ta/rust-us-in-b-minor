@@ -1,23 +1,25 @@
-use crate::types::array::RUST_ARRAY_WRAP;
-use crate::types::fixed_array::RUST_FIXED_ARRAY_WRAP;
-use crate::types::float32::RUST_FLOAT_32_WRAP;
-use crate::types::float64::RUST_FLOAT_64_WRAP;
-use crate::types::int::RUST_INT_WRAP;
-use crate::types::uint::RUST_UINT_WRAP;
-
-use crate::types::data_fixed_len::RUST_FIXED_DATA_WRAP;
-use crate::types::i16::RUST_I16_WRAP;
-use crate::types::i32::RUST_I32_WRAP;
-use crate::types::i64::RUST_I64_WRAP;
-use crate::types::i8::RUST_I8_WRAP;
-use crate::types::optional::RUST_OPT_WRAP;
-use crate::types::u16::RUST_U16_WRAP;
-use crate::types::u32::RUST_U32_WRAP;
-use crate::types::u64::RUST_U64_WRAP;
-use crate::types::u8::RUST_U8_WRAP;
-use crate::types::union::RUST_UNION_WRAP;
-use crate::types::strct::RUST_STRUCT_WRAP;
-use crate::types::enm::RUST_ENUM_WRAP;
+use crate::types::{
+    array::RUST_ARRAY_WRAP,
+    fixed_array::RUST_FIXED_ARRAY_WRAP,
+    float32::RUST_FLOAT_32_WRAP,
+    float64::RUST_FLOAT_64_WRAP,
+    int::RUST_INT_WRAP,
+    uint::RUST_UINT_WRAP,
+    data_fixed_len::RUST_FIXED_DATA_WRAP,
+    i8::RUST_I8_WRAP,
+    i16::RUST_I16_WRAP,
+    i32::RUST_I32_WRAP,
+    i64::RUST_I64_WRAP,
+    optional::RUST_OPT_WRAP,
+    u8::RUST_U8_WRAP,
+    u16::RUST_U16_WRAP,
+    u32::RUST_U32_WRAP,
+    u64::RUST_U64_WRAP,
+    union::RUST_UNION_WRAP,
+    strct::RUST_STRUCT_WRAP,
+    enm::RUST_ENUM_WRAP,
+    bool::RUST_BOOL_WRAP,
+};
 
 use crate::BareType;
 use rutie::{AnyObject, Object, RString};
@@ -49,6 +51,7 @@ pub fn wrapper_to_rust_type(wrapped_rust_class: &mut AnyObject) -> Rc<dyn BareTy
         "Rust_U16" => wrapped_rust_class.get_data_mut(&*RUST_U16_WRAP).clone(),
         "Rust_U32" => wrapped_rust_class.get_data_mut(&*RUST_U32_WRAP).clone(),
         "Rust_U64" => wrapped_rust_class.get_data_mut(&*RUST_U64_WRAP).clone(),
+        "Rust_Bool" => wrapped_rust_class.get_data_mut(&*RUST_BOOL_WRAP).clone(),
         "Rust_Opt" => wrapped_rust_class.get_data_mut(&*RUST_OPT_WRAP).clone(),
         "Rust_DataFixedLen" => wrapped_rust_class.get_data_mut(&*RUST_FIXED_DATA_WRAP).clone(),
         _ => panic!("That's not a bare type! {}", btype),

@@ -76,6 +76,10 @@ class Bare
     Rust_U64.new
   end
 
+  def self.Bool
+    Rust_Bool.new
+  end
+
   def self.DataFixedLen(len)
     Rust_DataFixedLen.new(len)
   end

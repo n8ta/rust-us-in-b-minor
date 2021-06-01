@@ -10,26 +10,13 @@ extern crate rutie;
 extern crate lazy_static;
 
 use rutie::{AnyException, AnyObject};
-use types::array::array_init;
-use types::data_fixed_len::fixed_data_init;
-use types::enm::enum_init;
-use types::fixed_array::fixed_array_init;
-use types::float32::float32_init;
-use types::float64::float64_init;
-use types::i16::i16_init;
-use types::i32::i32_init;
-use types::i64::i64_init;
-use types::optional::opt_init;
-use types::strct::struct_init;
-use types::union::union_init;
-
-use types::i8::i8_init;
-use types::int::int_init;
-use types::u16::u16_init;
-use types::u32::u32_init;
-use types::u64::u64_init;
-use types::u8::u8_init;
-use types::uint::uint_init;
+use types::{
+    array::array_init, bool::bool_init, data_fixed_len::fixed_data_init, enm::enum_init,
+    fixed_array::fixed_array_init, float32::float32_init, float64::float64_init, i16::i16_init,
+    i32::i32_init, i64::i64_init, i8::i8_init, int::int_init, optional::opt_init,
+    strct::struct_init, u16::u16_init, u32::u32_init, u64::u64_init, u8::u8_init, uint::uint_init,
+    union::union_init,
+};
 
 pub trait BareType {
     fn encode(&self, input: AnyObject, byte_output: &mut Vec<u8>) -> Result<(), AnyException>;
@@ -138,4 +125,5 @@ pub extern "C" fn bare_init() {
     union_init();
     struct_init();
     enum_init();
+    bool_init();
 }
