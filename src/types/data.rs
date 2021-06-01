@@ -42,7 +42,7 @@ wrappable_struct! {
 }
 
 ruby_methods!(
-    BareStruct,
+    BareData,
     RUST_DATA_WRAP,
     fn new() {
         Class::from_existing(NAME).wrap_data(Rc::new(RustData::new()), &*RUST_DATA_WRAP)

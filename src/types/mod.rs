@@ -11,6 +11,7 @@ pub(crate) mod i32;
 pub(crate) mod i64;
 pub(crate) mod i8;
 pub(crate) mod int;
+pub(crate) mod map;
 pub(crate) mod optional;
 pub(crate) mod strct;
 pub(crate) mod u16;

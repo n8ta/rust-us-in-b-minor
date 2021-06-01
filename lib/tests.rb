@@ -258,7 +258,7 @@ class TestBare < Minitest::Test
                  ])
   end
 
-  def _test_map
+  def test_map
     testing_hash = { 1 => "abc", 5 => :cow, 16382 => 123 }
     self.enc_dec([
                    [{ 8 => 16, 5 => 10 }, "\x02\x08\x10\x00\x05\x0A\x00".b, Bare.Map(Bare.U8, Bare.U16)],
