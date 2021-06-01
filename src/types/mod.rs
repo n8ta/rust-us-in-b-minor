@@ -14,3 +14,4 @@ pub(crate) mod u32;
 pub(crate) mod u64;
 pub(crate) mod u8;
 pub(crate) mod uint;
+pub(crate) mod union;

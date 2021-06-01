@@ -32,6 +32,10 @@ class Bare
     Rust_Array.new typ
   end
 
+  def self.Union(types)
+    Rust_Union.new types
+  end
+
   def self.I8
     Rust_I8.new
   end
@@ -46,6 +50,22 @@ class Bare
   end
   def self.Optional(typ)
     Rust_Opt.new(typ)
+  end
+
+  def self.U8
+    Rust_U8.new
+  end
+
+  def self.U16
+    Rust_U16.new
+  end
+
+  def self.U32
+    Rust_U32.new
+  end
+
+  def self.U64
+    Rust_U64.new
   end
 
   def self.DataFixedLen(len)

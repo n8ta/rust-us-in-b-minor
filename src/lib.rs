@@ -19,6 +19,7 @@ use types::i16::i16_init;
 use types::i32::i32_init;
 use types::i64::i64_init;
 use types::optional::opt_init;
+use types::union::union_init;
 
 use types::i8::i8_init;
 use types::int::int_init;
@@ -132,4 +133,5 @@ pub extern "C" fn bare_init() {
     u16_init();
     u32_init();
     u64_init();
+    union_init();
 }
