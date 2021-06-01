@@ -20,6 +20,7 @@ use crate::types::{
     enm::RUST_ENUM_WRAP,
     bool::RUST_BOOL_WRAP,
     void::RUST_VOID_WRAP,
+    data::RUST_DATA_WRAP,
 };
 
 use crate::BareType;
@@ -55,6 +56,7 @@ pub fn wrapper_to_rust_type(wrapped_rust_class: &mut AnyObject) -> Rc<dyn BareTy
         "Rust_Bool" => wrapped_rust_class.get_data_mut(&*RUST_BOOL_WRAP).clone(),
         "Rust_Opt" => wrapped_rust_class.get_data_mut(&*RUST_OPT_WRAP).clone(),
         "Rust_Void" => wrapped_rust_class.get_data_mut(&*RUST_VOID_WRAP).clone(),
+        "Rust_Data" => wrapped_rust_class.get_data_mut(&*RUST_DATA_WRAP).clone(),
         "Rust_DataFixedLen" => wrapped_rust_class.get_data_mut(&*RUST_FIXED_DATA_WRAP).clone(),
         _ => panic!("That's not a bare type! {}", btype),
     }

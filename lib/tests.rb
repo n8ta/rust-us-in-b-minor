@@ -213,7 +213,7 @@ class TestBare < Minitest::Test
                  ])
   end
 
-  def _test_data
+  def test_data
     self.enc_dec([
                    ["\xFF\xFF\x00\x00".b, "\x04\xFF\xFF\x00\x00".b, Bare.Data],
                    ["\xFF\xFF\x00\x00\xFF\xFF".b, "\x06\xFF\xFF\x00\x00\xFF\xFF".b, Bare.Data],
@@ -237,7 +237,7 @@ class TestBare < Minitest::Test
                  ])
   end
 
-  def _test_array_u8
+  def test_array_u8
     self.enc_dec([
                    [[3, 5, 6, 7], "\x04\x03\x05\x06\x07".b, Bare.Array(Bare.U8)],
                    [[[1, 2, 3], [4, 5, 6, 8]], "\x02\x03\x01\x02\x03\x04\x04\x05\x06\x08".b, Bare.Array(Bare.Array(Bare.U8))],

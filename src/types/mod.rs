@@ -1,5 +1,6 @@
 pub(crate) mod array;
 pub(crate) mod bool;
+pub(crate) mod data;
 pub(crate) mod data_fixed_len;
 pub(crate) mod enm;
 pub(crate) mod fixed_array;
