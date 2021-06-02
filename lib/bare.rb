@@ -88,8 +88,8 @@ class Bare
     Rust_Data.new
   end
 
-  def self.Map(key_type, value_type)
-    Rust_Map.new key_type, value_type
+  def self.Map(from, to)
+    Rust_Map.new from, to
   end
 
   def self.DataFixedLen(len)
