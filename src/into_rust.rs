@@ -58,6 +58,7 @@ pub fn wrapper_to_rust_type(wrapped_rust_class: &mut AnyObject) -> Rc<dyn BareTy
         "Rust_Opt" => wrapped_rust_class.get_data_mut(&*RUST_OPT_WRAP).clone(),
         "Rust_Void" => wrapped_rust_class.get_data_mut(&*RUST_VOID_WRAP).clone(),
         "Rust_Data" => wrapped_rust_class.get_data_mut(&*RUST_DATA_WRAP).clone(),
+        "Rust_Map" => wrapped_rust_class.get_data_mut(&*RUST_MAP_WRAP).clone(),
         "Rust_DataFixedLen" => wrapped_rust_class.get_data_mut(&*RUST_FIXED_DATA_WRAP).clone(),
         "Rust_Map" => wrapped_rust_class.get_data_mut(&*RUST_MAP_WRAP).clone(),
         _ => panic!("That's not a bare type! {}", btype),

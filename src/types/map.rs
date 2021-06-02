@@ -27,29 +27,32 @@ impl RustMap {
 }
 
 impl BareType for RustMap {
-    fn encode(&self, hash: AnyObject, bytes: &mut Vec<u8>) -> Result<(), AnyException> {
-        let hash = hash.try_convert_to::<::rutie::Hash>()?;
-        let count = hash.length();
-
-        RustUint::new().encode(rutie::Fixnum::new(count as i64).into(), bytes);
-
-        hash.each(|from, to| {
-            self.from.encode(from, bytes);
-            self.to.encode(to, bytes);
+    fn encode(&self, map: AnyObject, bytes: &mut Vec<u8>) -> Result<(), AnyException> {
+        let map = map.try_convert_to::<rutie::Hash>()?;
+        let size = map.length();
+        RustUint.encode(rutie::Integer::from(size as u64).into(), bytes);
+        let mut exception = Ok(());
+        map.each(|key, value| {
+            if let Err(e) = self.from.encode(key, bytes) {
+                exception = Err(e);
+            }
+            if let Err(e) = self.to.encode(value, bytes) {
+                exception = Err(e);
+            }
         });
-        Result::Ok(())
+        exception
     }
     fn decode<'a>(&self, bytes: &'a [u8]) -> (&'a [u8], AnyObject) {
-        let (mut rem_bytes, count) = RustUint::new().decode(bytes);
-        let count = count.try_convert_to::<rutie::Integer>().unwrap().to_i64();
-        let mut hash = rutie::Hash::new();
-        for i in 0..count {
-            let (rem_bytes_a, from) = self.from.decode(rem_bytes);
-            let (rem_bytes_b, to) = self.to.decode(rem_bytes_a);
-            rem_bytes = rem_bytes_b;
-            hash.store(from, to);
+        let (mut bytes, count) = RustUint.decode(bytes);
+        let count = count.try_convert_to::<rutie::Integer>().unwrap().to_u64() as usize;
+        let mut map = rutie::Hash::new();
+        for _ in 0..count {
+            let (new_bytes, key) = self.from.decode(bytes);
+            let (new_bytes, value) = self.to.decode(new_bytes);
+            map.store(key, value);
+            bytes = new_bytes;
         }
-        (rem_bytes, hash.into())
+        (bytes, map.into())
     }
 }
 
@@ -57,7 +60,7 @@ type RustMapRc = Rc<RustMap>;
 
 wrappable_struct! {
     RustMapRc,
-    RustMapWrap,
+    RustMapRcWrap,
     RUST_MAP_WRAP,
     mark(data) {}
 }
@@ -86,7 +89,7 @@ fn encode_test_map() {
                rutie::Integer::new(10));
     let map = RustMap {
         from: Rc::new(RustU8::new()),
-        to: Rc::new(RustU16::new())
+        to: Rc::new(RustU16::new()),
     };
     let mut bytes = vec![];
     map.encode(hash.into(), &mut bytes);
