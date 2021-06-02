@@ -91,4 +91,8 @@ class Bare
   def self.DataFixedLen(len)
     Rust_DataFixedLen.new(len)
   end
+
+  def self.Map(from, to)
+    Rust_Map.new(from, to)
+  end
 end

@@ -15,7 +15,7 @@ use types::{
     enm::enum_init, fixed_array::fixed_array_init, float32::float32_init, float64::float64_init,
     i16::i16_init, i32::i32_init, i64::i64_init, i8::i8_init, int::int_init, optional::opt_init,
     strct::struct_init, u16::u16_init, u32::u32_init, u64::u64_init, u8::u8_init, uint::uint_init,
-    union::union_init, void::void_init,
+    union::union_init, void::void_init, map::map_init
 };
 
 pub trait BareType {
@@ -128,4 +128,5 @@ pub extern "C" fn bare_init() {
     bool_init();
     void_init();
     data_init();
+    map_init();
 }

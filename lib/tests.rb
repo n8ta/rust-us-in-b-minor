@@ -227,7 +227,7 @@ class TestBare < Minitest::Test
                  ])
   end
 
-  def test_union
+  def _test_union
     self.enc_dec([
                    [{ type: Bare.Uint, value: 5 }, "\x00\x05".b, Bare.Union({ 0 => Bare.Uint, 1 => Bare.U16 })],
                    [{ type: Bare.U16, value: 5 }, "\x01\x05\x00".b, Bare.Union({ 0 => Bare.Uint, 1 => Bare.U16 })],
@@ -258,7 +258,7 @@ class TestBare < Minitest::Test
                  ])
   end
 
-  def _test_map
+  def test_map
     testing_hash = { 1 => "abc", 5 => :cow, 16382 => 123 }
     self.enc_dec([
                    [{ 8 => 16, 5 => 10 }, "\x02\x08\x10\x00\x05\x0A\x00".b, Bare.Map(Bare.U8, Bare.U16)],
@@ -288,7 +288,7 @@ class TestBare < Minitest::Test
                  ])
   end
 
-  def test_void
+  def _test_void
     self.enc_dec([
                    [{ type: Bare.Void }, "\x01".b, Bare.Union({ 0 => Bare.Uint, 1 => Bare.Void })],
                  ])
