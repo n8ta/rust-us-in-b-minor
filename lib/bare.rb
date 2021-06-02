@@ -88,6 +88,10 @@ class Bare
     Rust_Data.new
   end
 
+  def self.String
+    Rust_String.new
+  end
+
   def self.Map(from, to)
     Rust_Map.new from, to
   end

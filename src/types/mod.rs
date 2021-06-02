@@ -21,3 +21,4 @@ pub(crate) mod u8;
 pub(crate) mod uint;
 pub(crate) mod union;
 pub(crate) mod void;
+pub(crate) mod rstring;

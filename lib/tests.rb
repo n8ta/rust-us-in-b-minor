@@ -277,7 +277,7 @@ class TestBare < Minitest::Test
                  ])
   end
 
-  def _test_string
+  def test_string
     self.enc_dec([
                    ["ABC", "\x03\x41\x42\x43".b, Bare.String],
                    ["A C", "\x03\x41\x20\x43".b, Bare.String],
